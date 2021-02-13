@@ -1,3 +1,4 @@
+using DotNet5.API.Configurations;
 using DotNet5.API.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,6 +39,7 @@ namespace DotNet5.API
                          .AllowAnyMethod()
                 );
             });
+            services.AddAutoMapper(typeof(MapperInitilizer));
             services.AddSwaggerGen(a => 
             {
                 a.SwaggerDoc("v1", new OpenApiInfo { Title = "Dotnet5.API", Version = "v1" });
