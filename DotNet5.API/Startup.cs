@@ -1,5 +1,7 @@
 using DotNet5.API.Configurations;
 using DotNet5.API.Data;
+using DotNet5.API.IRepository;
+using DotNet5.API.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,7 +34,8 @@ namespace DotNet5.API
             services.AddDbContext<DatabaseContext>(x =>
                          x.UseSqlServer(Configuration.GetConnectionString("sqlConnection"))
             );
-            services.AddCors(a=> {
+            services.AddCors(a =>
+            {
                 a.AddPolicy("AllowAll", builder =>
                          builder.AllowAnyOrigin()
                          .AllowAnyHeader()
@@ -40,10 +43,14 @@ namespace DotNet5.API
                 );
             });
             services.AddAutoMapper(typeof(MapperInitilizer));
-            services.AddSwaggerGen(a => 
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddSwaggerGen(a =>
             {
                 a.SwaggerDoc("v1", new OpenApiInfo { Title = "Dotnet5.API", Version = "v1" });
             });
+            services.AddControllers().AddNewtonsoftJson(op =>
+            op.SerializerSettings.ReferenceLoopHandling =
+            Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddControllers();
         }
 
@@ -55,7 +62,7 @@ namespace DotNet5.API
                 app.UseDeveloperExceptionPage();
             }
             app.UseSwagger();
-            app.UseSwaggerUI(c=>c.SwaggerEndpoint("/swagger/v1/swagger.json", "Dotnet5.API v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Dotnet5.API v1"));
             app.UseHttpsRedirection();
             app.UseCors("AllowAll");
             app.UseRouting();
