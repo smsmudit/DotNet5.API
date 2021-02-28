@@ -17,16 +17,14 @@ namespace DotNet5.API.Controllers
     public class AccountController : ControllerBase
     {
         private readonly UserManager<ApiUser> _userManager;
-        private readonly SignInManager<ApiUser> _signInManager;
+        //private readonly SignInManager<ApiUser> _signInManager;
         private readonly ILogger<AccountController> _logger;
         private readonly IMapper _mapper;
         public AccountController(UserManager<ApiUser> userManager,
-            SignInManager<ApiUser> signInManager,
             ILogger<AccountController> logger,
             IMapper mapper)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
             _logger = logger;
             _mapper = mapper;
         }
@@ -43,7 +41,7 @@ namespace DotNet5.API.Controllers
             {
                 var user = _mapper.Map<ApiUser>(userDTO);
                 user.UserName = userDTO.Email;
-                var result = await _userManager.CreateAsync(user);
+                var result = await _userManager.CreateAsync(user,userDTO.Password);
                 if (!result.Succeeded)
                 {
                     foreach(var error in result.Errors)
