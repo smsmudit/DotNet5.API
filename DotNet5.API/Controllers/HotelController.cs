@@ -25,6 +25,7 @@ namespace DotNet5.API.Controllers
             _mapper = mapper;
         }
         [HttpGet]
+        [Route("gethotels")]
         public async Task<IActionResult> GetHotels()
         {
             try

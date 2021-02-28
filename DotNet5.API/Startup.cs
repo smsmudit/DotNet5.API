@@ -5,6 +5,7 @@ using DotNet5.API.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -34,6 +35,9 @@ namespace DotNet5.API
             services.AddDbContext<DatabaseContext>(x =>
                          x.UseSqlServer(Configuration.GetConnectionString("sqlConnection"))
             );
+            services.AddAuthentication();
+            services.ConfigureIdentity();
+
             services.AddCors(a =>
             {
                 a.AddPolicy("AllowAll", builder =>
@@ -68,7 +72,6 @@ namespace DotNet5.API
             app.UseRouting();
 
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
