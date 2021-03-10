@@ -28,5 +28,9 @@ namespace DotNet5.API
             builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), services);
             builder.AddEntityFrameworkStores<DatabaseContext>().AddDefaultTokenProviders();
         }
+        public static void ConfigureJWT()
+        {
+
+        }
     }
 }
